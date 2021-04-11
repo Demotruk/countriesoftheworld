@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Countries";
+}
+
+<div class="jumbotron">
+    <table style="width:100%">
+        <tr>
+            <th>Name of Country</th>
+            <th>Region</th>
+            <th>Subregion</th>
+        </tr>
+        @foreach (CountriesOfTheWorld.Models.Country country in ViewBag.CountryData)
+        {
+
+
+            <tr>
+                <td>@country.name</td>
+                <td>@country.region</td>
+                <td>@country.subregion</td>
+            </tr>
+
+        }
+    </table>
+</div>

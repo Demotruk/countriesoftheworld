@@ -14,6 +14,7 @@ namespace CountriesOfTheWorld.Controllers
             var countriesService = new CountriesService();
 
             ViewBag.CountryData = countriesService.AllCountries();
+            ViewBag.Service = new CountriesService();
 
             return View();
         }

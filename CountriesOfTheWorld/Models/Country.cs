@@ -28,5 +28,10 @@ namespace CountriesOfTheWorld.Models
         public string flag { get; set; }
         public List<RegionalBloc> regionalBlocs { get; set; }
         public string cioc { get; set; }
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

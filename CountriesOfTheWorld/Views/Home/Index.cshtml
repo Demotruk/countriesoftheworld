@@ -1,24 +1,75 @@
 ﻿@{
     ViewBag.Title = "Countries";
+    int i = 0;
 }
 
 <div class="jumbotron">
     <table style="width:100%">
         <tr>
-            <th>Name of Country</th>
+            <th>Country Info</th>
             <th>Region</th>
             <th>Subregion</th>
         </tr>
         @foreach (CountriesOfTheWorld.Models.Country country in ViewBag.CountryData)
         {
-
-
             <tr>
-                <td>@country.name</td>
-                <td>@country.region</td>
-                <td>@country.subregion</td>
-            </tr>
+                <td onclick="$(this).find('div').toggleClass('hidden');">
+                    @country.name
+                    <div id="extra_@country.alpha2Code" class="hidden">
+                        Capital City: @country.capital
+                        <br />
+                        Total Population: @country.population
+                        <br />
+                        Currencies:
+                        @foreach (CountriesOfTheWorld.Models.Currency currency in country.currencies)
+                        {
+                            @currency.name
+                            <br />
+                        }
+                        Languages:
+                        @foreach (CountriesOfTheWorld.Models.Language language in country.languages)
+                        {
+                            @language.name
+                            <br />
+                        }
+                        @if (country.borders.Count > 0)
+                        {
+                            <span>
+                                Bordering Countries:
+                                @foreach (string borderCountryCode in country.borders)
+                                {
+                                    <br />
+                                    @ViewBag.Service.GetCountry(borderCountryCode).ToString()
+                                }
+                            </span>
+                        }
+                    </div>
+                </td>
+                <td onclick="$(this).find('div').toggleClass('hidden');">
+                    @country.region
+                    <div class="hidden">
+                        @if (!string.IsNullOrEmpty(country.region))
+                        {
+                            @ViewBag.Service.GetRegion(country.region).Info()
+                            <br/>
+                            <span>Subregions:</span><br/>
+                            foreach(CountriesOfTheWorld.Models.SubRegion subRegion in ViewBag.Service.GetRegion(country.region).SubRegions.Values)
+                            {
+                                @subRegion.Name <br />
+                            }
+                        }
+                        
 
+                    </div>
+                </td>
+                <td onclick="$(this).find('div').toggleClass('hidden');">
+                    @country.subregion
+                    <div class="hidden">
+                        @ViewBag.Service.GetSubRegion(country.subregion).Info()
+                    </div>
+                </td>
+            </tr>
+            i++;
         }
     </table>
 </div>

@@ -4,6 +4,11 @@ namespace CountriesOfTheWorld.Models
 {
     public class Country
     {
+        public Country()
+        {
+            BorderCountries = new Dictionary<string, Country>();
+        }
+
         public string name { get; set; }
         public List<string> topLevelDomain { get; set; }
         public string alpha2Code { get; set; }
@@ -33,5 +38,11 @@ namespace CountriesOfTheWorld.Models
         {
             return name;
         }
+
+        public Region Region { get { return SubRegion.Region; } }
+
+        public SubRegion SubRegion { get; set; }
+
+        public Dictionary<string,Country> BorderCountries { get; private set; }
     }
 }

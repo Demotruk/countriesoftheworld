@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace CountriesOfTheWorld.Models
@@ -30,5 +31,7 @@ namespace CountriesOfTheWorld.Models
         public Region Region { get; set; }
 
         public string Info() { return $"Population: {Population}"; }
+
+        public string ShortName { get { return Regex.Replace(Name, @"\s+", ""); } }
     }
 }

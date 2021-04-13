@@ -13,58 +13,148 @@
         @foreach (CountriesOfTheWorld.Models.Country country in ViewBag.CountryData)
         {
             <tr>
-                <td onclick="$(this).find('div').toggleClass('hidden');">
-                    @country.name
-                    <div id="extra_@country.alpha2Code" class="hidden">
-                        Capital City: @country.capital
-                        <br />
-                        Total Population: @country.population
-                        <br />
-                        Currencies:
-                        @foreach (CountriesOfTheWorld.Models.Currency currency in country.currencies)
-                        {
-                            @currency.name
+                <td>
+                    <div id="country_@country.alpha2Code" onclick="$('#extra_@country.alpha2Code').toggleClass('hidden');">@country.name</div>
+                    <div id="extra_@country.alpha2Code" class="hidden" style="background: #B695C0;">
+                        <div onclick="$('#extra_@country.alpha2Code').toggleClass('hidden');">
+                            Capital City: @country.capital
                             <br />
-                        }
-                        Languages:
-                        @foreach (CountriesOfTheWorld.Models.Language language in country.languages)
-                        {
-                            @language.name
+                            Total Population: @country.population
                             <br />
-                        }
+                            Currencies:
+                            @foreach (CountriesOfTheWorld.Models.Currency currency in country.currencies)
+                            {
+                                @currency.name
+                                <br />
+                            }
+                            Languages:
+                            @foreach (CountriesOfTheWorld.Models.Language language in country.languages)
+                            {
+                                @language.name
+                                <br />
+                            }
+                        </div>
                         @if (country.borders.Count > 0)
                         {
                             <span>
                                 Bordering Countries:
-                                @foreach (string borderCountryCode in country.borders)
-                                {
-                                    <br />
-                                    @ViewBag.Service.GetCountry(borderCountryCode).ToString()
-                                }
                             </span>
+                            foreach (CountriesOfTheWorld.Models.Country borderCountry in country.BorderCountries.Values)
+                            {
+                                <br />
+                                <div onclick="$('#bordering_@country.alpha2Code@borderCountry.alpha2Code').toggleClass('hidden');">
+                                    @borderCountry.name
+                                </div>
+                                <div id="bordering_@country.alpha2Code@borderCountry.alpha2Code" class="hidden" style="background: #ADD8E6;">
+                                    Capital City: @borderCountry.capital
+                                    <br />
+                                    Total Population: @borderCountry.population
+                                    <br />
+                                    Currencies:
+                                    @foreach (CountriesOfTheWorld.Models.Currency currency in borderCountry.currencies)
+                                    {
+                                        @currency.name
+                                        <br />
+                                    }
+                                    Languages:
+                                    @foreach (CountriesOfTheWorld.Models.Language language in borderCountry.languages)
+                                    {
+                                        @language.name
+                                        <br />
+                                    }
+                                </div>
+
+                            }
+
                         }
                     </div>
                 </td>
-                <td onclick="$(this).find('div').toggleClass('hidden');">
-                    @country.region
-                    <div class="hidden">
+                <td>
+                    <div id="region_@country.region@country.name" onclick="$('#region_extra_@country.region@country.name').toggleClass('hidden');">
+                        @country.region
+                    </div>
+
+                    <div id="region_extra_@country.region@country.name" class="hidden" style="background: #B695C0;">
                         @if (!string.IsNullOrEmpty(country.region))
                         {
                             @ViewBag.Service.GetRegion(country.region).Info()
-                            <br/>
-                            <span>Subregions:</span><br/>
-                            foreach(CountriesOfTheWorld.Models.SubRegion subRegion in ViewBag.Service.GetRegion(country.region).SubRegions.Values)
+                            <br />
+                            <span>Countries:</span><br />
+                            foreach (CountriesOfTheWorld.Models.Country countryInRegion in ViewBag.Service.GetRegion(country.region).Countries)
                             {
-                                @subRegion.Name <br />
+                                <div onclick="$(this).find('div').first().toggleClass('hidden');">
+                                    @countryInRegion.name
+                                    <div class="hidden" style="background: #ADD8E6;">
+                                        Capital City: @countryInRegion.capital
+                                        <br />
+                                        Total Population: @countryInRegion.population
+                                        <br />
+                                        Currencies:
+                                        @foreach (CountriesOfTheWorld.Models.Currency currency in countryInRegion.currencies)
+                                        {
+                                            @currency.name
+                                            <br />
+                                        }
+                                        Languages:
+                                        @foreach (CountriesOfTheWorld.Models.Language language in countryInRegion.languages)
+                                        {
+                                            @language.name
+                                            <br />
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            <span>Subregions:</span><br />
+                            foreach (CountriesOfTheWorld.Models.SubRegion subRegion in country.Region.SubRegions.Values)
+                            {
+                                <div onclick="$('#crsc_@country.name@country.region@subRegion.ShortName').toggleClass('hidden');">
+                                    @subRegion.Name <br />
+                                    <div id="crsc_@country.name@country.region@subRegion.ShortName" class="hidden" style="background: #ADD8E6;">
+                                        Population: @subRegion.Population <br />
+                                        Region: @subRegion.Region.Name <br />
+                                    </div>
+                                </div>
                             }
                         }
                     </div>
                 </td>
-                <td onclick="$(this).find('div').toggleClass('hidden');">
-                    @country.subregion
-                    <div class="hidden">
-                        @ViewBag.Service.GetSubRegion(country.subregion).Info()
+                <td>
+                    <div id="subregion_@country.alpha2Code@country.SubRegion.ShortName" onclick="$('#cs_@country.alpha2Code@country.SubRegion.ShortName').toggleClass('hidden');">
+                        @country.subregion
                     </div>
+                    <div id="cs_@country.alpha2Code@country.SubRegion.ShortName" class="hidden" style="background: #B695C0;">
+                        @country.SubRegion.Info() <br />
+                        <div onclick="$('#csr_@country.alpha2Code@country.SubRegion.ShortName@country.SubRegion.Region.Name').toggleClass('hidden');">Region: @country.Region.Name <br /></div>
+                        <div id="csr_@country.alpha2Code@country.SubRegion.ShortName@country.SubRegion.Region.Name" class="hidden" style="background: #ADD8E6;">
+                            @country.SubRegion.Region.Info()
+                        </div>
+                        Countries:
+                        @foreach (CountriesOfTheWorld.Models.Country subregionCountry in country.SubRegion.Countries.Values)
+                        {
+                            <div onclick="$('#csc_@country.alpha2Code@country.SubRegion.ShortName@subregionCountry.alpha2Code').toggleClass('hidden')">@subregionCountry.name</div>
+                            <div id="csc_@country.alpha2Code@country.SubRegion.ShortName@subregionCountry.alpha2Code" class="hidden" style="background: #ADD8E6;">
+                                Capital City: @subregionCountry.capital
+                                <br />
+                                Total Population: @subregionCountry.population
+                                <br />
+                                Currencies:
+                                @foreach (CountriesOfTheWorld.Models.Currency currency in subregionCountry.currencies)
+                                {
+                                    @currency.name
+                                    <br />
+                                }
+                                Languages:
+                                @foreach (CountriesOfTheWorld.Models.Language language in subregionCountry.languages)
+                                {
+                                    @language.name
+                                    <br />
+                                }
+                            </div>
+                        }
+                    </div>
+
+
                 </td>
             </tr>
             i++;
